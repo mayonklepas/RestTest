@@ -1,0 +1,3 @@
+http://localhost:8080/SMARTGATEWAY/rest;
+http://localhost:8687/testing/api/test;
+http://172.16.23.244:8080/SMARTGATEWAYSQL/rest;
