@@ -102,7 +102,7 @@ extends JFrame {
         this.cmbReqMode.setModel((ComboBoxModel)new DefaultComboBoxModel((Object[])new String[]{"One by one", "All in one"}));
         this.jLabel5.setText("URL");
         this.jLabel9.setText("Request Type");
-        this.cmbReqType.setModel((ComboBoxModel)new DefaultComboBoxModel((Object[])new String[]{"Account Enquiry", "Credit Transfer"}));
+        this.cmbReqType.setModel((ComboBoxModel)new DefaultComboBoxModel((Object[])new String[]{"Account Enquiry", "Credit Transfer","Credit Transfer Settle"}));
         this.jLabel10.setText("Delay");
         this.jLabel6.setText("Request Option");
         this.cmbReqOption.setModel((ComboBoxModel)new DefaultComboBoxModel((Object[])new String[]{"SMARTGATEWAY", "RAW GET", "RAW POST"}));
