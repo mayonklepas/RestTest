@@ -8,13 +8,14 @@ package resttest;
  *
  * @author Mulyadi
  */
-public class RestTest {
+public class WorkTools {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       MainPaneView v=new MainPaneView();
+       MainPanelView v=new MainPanelView();
+       v.setTitle("Web Test Toolkit");
        v.setLocationRelativeTo(null);
        v.setVisible(true);
     }
