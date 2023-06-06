@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
@@ -71,6 +72,8 @@ public class QueryTestController {
         for (String urlStr : urlConfig.split(";")) {
             this.view.tqCmbUrl.addItem(urlStr);
         }
+        
+        view.tqCmbUrl.setSelectedIndex(2);
     }
 
     private void loadSideTable() {
@@ -98,6 +101,8 @@ public class QueryTestController {
                 }
                 dtm.addRow(lsValue.toArray());
             }
+        }else{
+            JOptionPane.showMessageDialog(view, "Empty Data");
         }
 
     }
@@ -139,7 +144,7 @@ public class QueryTestController {
                 LocalDateTime resTime = LocalDateTime.now();
                 view.tqLsending.setText("Complete");
                 Duration dura = Duration.between(reqTime, resTime);
-                view.tqLtime.setText(String.valueOf(dura.getSeconds()));
+                view.tqLtime.setText(String.valueOf(dura.getSeconds())+"s");
 
                 addDatatableSide(lsTable);
             } catch (IOException ex) {
@@ -176,7 +181,7 @@ public class QueryTestController {
                     LocalDateTime resTime = LocalDateTime.now();
                     view.tqLsending.setText("Complete");
                     Duration dura = Duration.between(reqTime, resTime);
-                    view.tqLtime.setText(String.valueOf(dura.getSeconds()));
+                    view.tqLtime.setText(String.valueOf(dura.getSeconds())+"s");
 
                     loadAndFillTable(ja);
                 } catch (IOException ex) {
@@ -201,7 +206,7 @@ public class QueryTestController {
     }
 
     private String getRestData(String valRequest) throws IOException {
-        URL url = new URL(this.view.tdCmbUrl.getEditor().getItem().toString().trim());
+        URL url = new URL(view.tqCmbUrl.getEditor().getItem().toString().trim());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("User-Agent", "Mozilla/5.0");
         conn.setDoOutput(true);

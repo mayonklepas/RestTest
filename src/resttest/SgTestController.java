@@ -111,6 +111,8 @@ public class SgTestController {
             this.view.trCmbUrl.addItem(urlStr);
         }
         sleepThread = Integer.parseInt(appConfig.split("##")[1].trim());
+        
+        view.trCmbUrl.setSelectedIndex(0);
     }
 
     private void loadTable() {

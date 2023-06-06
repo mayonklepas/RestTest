@@ -44,21 +44,25 @@ public class DqTestController {
 
     public DqTestController(MainPanelView view) {
         this.view = view;
+        view.tdEdReqSize.setText("1");
         dtm = new DefaultTableModel();
         loadTable();
         loadUrlCollection();
+        sendDq();
     }
 
-        private void loadUrlCollection() {
+    private void loadUrlCollection() {
         String appConfig = WorkTools.urlData;
         String urlConfig = appConfig.split("##")[0];
 
         for (String urlStr : urlConfig.split(";")) {
             this.view.tdCmbUrl.addItem(urlStr);
         }
+
+        view.tdCmbUrl.setSelectedIndex(1);
     }
-    
-    private void senDq() {
+
+    private void sendDq() {
         view.tdBsendDq.addActionListener((e) -> {
 
             int reqSize = Integer.parseInt(view.tdEdReqSize.getText());
@@ -71,11 +75,11 @@ public class DqTestController {
                 final int fnumber = i;
                 execServ.execute(() -> {
                     try {
-                        String reqTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                        LocalDateTime reqTime = LocalDateTime.now();
                         String result = getRestData(param);
-                        String resTime =  LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                        String nofinale=String.valueOf(fnumber+1);
-                        addDataTable(nofinale , dq+" : "+fl, reqTime, resTime, result);
+                        LocalDateTime resTime = LocalDateTime.now();
+                        String nofinale = String.valueOf(fnumber + 1);
+                        addDataTable(nofinale, dq + " : " + fl, df.format(reqTime), df.format(resTime), result);
                     } catch (IOException ex) {
                         Logger.getLogger(DqTestController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -115,11 +119,11 @@ public class DqTestController {
         this.view.tdTableData.getColumnModel().getColumn(2).setMaxWidth(130);
         this.view.tdTableData.getColumnModel().getColumn(3).setMinWidth(130);
         this.view.tdTableData.getColumnModel().getColumn(3).setMaxWidth(130);
-        this.view.tdTableData.getColumnModel().getColumn(4).setMinWidth(100);
-        this.view.tdTableData.getColumnModel().getColumn(4).setMaxWidth(100);
+        this.view.tdTableData.getColumnModel().getColumn(4).setMinWidth(150);
+        this.view.tdTableData.getColumnModel().getColumn(4).setMaxWidth(150);
     }
 
-    private void addDataTable(String no, String dqName,String reqTime, String resTime,String result) {
+    private void addDataTable(String no, String dqName, String reqTime, String resTime, String result) {
         this.dtm.addRow(new Object[]{no, dqName, reqTime, resTime, result});
     }
 

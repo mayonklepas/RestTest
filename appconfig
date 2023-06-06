@@ -1,5 +1,6 @@
 http://localhost:8080/SMARTGATEWAY/rest;
-http://localhost:8687/testing/api/test;
+http://localhost:8080/SMARTGATEWAY/rest/dq;
+http://localhost:8080/SMARTGATEWAY/rest/sql;
 http://172.16.23.244:8080/SMARTGATEWAYSQL/rest;
 ##
 100
