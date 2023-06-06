@@ -400,7 +400,7 @@ public class SgTestController {
                                 counterReq = counterReq + 1;
                                 view.trLsending.setText("Sending : " + counterReq + " / " + reqSizeLabel);
                                 LocalDateTime reqTime = LocalDateTime.now();
-                                String sReqTime = df.format((TemporalAccessor) reqTime);
+                                String sReqTime = df.format(reqTime);
                                 String strSuffix = String.valueOf((int) suffix);
                                 try {
                                     String request = "";

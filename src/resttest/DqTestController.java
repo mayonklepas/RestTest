@@ -16,9 +16,15 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAccessor;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -38,7 +44,8 @@ public class DqTestController {
 
     public DqTestController(MainPanelView view) {
         this.view = view;
-        this.loadTable();
+        dtm = new DefaultTableModel();
+        loadTable();
     }
 
     private void senDq() {
@@ -51,9 +58,14 @@ public class DqTestController {
 
             for (int i = 0; i < reqSize; i++) {
                 ExecutorService execServ = Executors.newSingleThreadExecutor();
+                final int fnumber = i;
                 execServ.execute(() -> {
                     try {
-                        getRestData(param);
+                        String reqTime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                        String result = getRestData(param);
+                        String resTime =  LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                        String nofinale=String.valueOf(fnumber+1);
+                        addDataTable(nofinale , dq+" : "+fl, reqTime, resTime, result);
                     } catch (IOException ex) {
                         Logger.getLogger(DqTestController.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -64,7 +76,6 @@ public class DqTestController {
     }
 
     private String getRestData(String valRequest) throws IOException {
-        StringBuilder sb = new StringBuilder();
         URL url = new URL(this.view.tdEdUrl.getText().trim());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("User-Agent", "Mozilla/5.0");
@@ -81,25 +92,25 @@ public class DqTestController {
         conn.disconnect();
         return result;
     }
-    
-        private void loadTable() {
-        Object[] header = new String[]{"No", "Request Name", "Request Time", "Response Time", "Process Time", "Result"};
+
+    private void loadTable() {
+        Object[] header = new String[]{"No", "Dq Name", "Request Time", "Response Time", "Result"};
         this.dtm.setColumnIdentifiers(header);
-        this.view.trTableData.setModel((TableModel) this.dtm);
-        this.view.trTableData.getSelectionModel().setSelectionMode(0);
-        this.view.trTableData.getColumnModel().getColumn(0).setMaxWidth(40);
-        this.view.trTableData.getColumnModel().getColumn(1).setMinWidth(150);
-        this.view.trTableData.getColumnModel().getColumn(1).setMaxWidth(150);
-        this.view.trTableData.getColumnModel().getColumn(2).setMinWidth(130);
-        this.view.trTableData.getColumnModel().getColumn(2).setMaxWidth(130);
-        this.view.trTableData.getColumnModel().getColumn(3).setMinWidth(130);
-        this.view.trTableData.getColumnModel().getColumn(3).setMaxWidth(130);
-        this.view.trTableData.getColumnModel().getColumn(4).setMinWidth(100);
-        this.view.trTableData.getColumnModel().getColumn(4).setMaxWidth(100);
+        this.view.tdTableData.setModel((TableModel) this.dtm);
+        this.view.tdTableData.getSelectionModel().setSelectionMode(0);
+        this.view.tdTableData.getColumnModel().getColumn(0).setMaxWidth(40);
+        //this.view.tdTableData.getColumnModel().getColumn(1).setMinWidth(150);
+        //this.view.tdTableData.getColumnModel().getColumn(1).setMaxWidth(150);
+        this.view.tdTableData.getColumnModel().getColumn(2).setMinWidth(130);
+        this.view.tdTableData.getColumnModel().getColumn(2).setMaxWidth(130);
+        this.view.tdTableData.getColumnModel().getColumn(3).setMinWidth(130);
+        this.view.tdTableData.getColumnModel().getColumn(3).setMaxWidth(130);
+        this.view.tdTableData.getColumnModel().getColumn(4).setMinWidth(100);
+        this.view.tdTableData.getColumnModel().getColumn(4).setMaxWidth(100);
     }
 
-    private void addDataTable(String no, String requestName, String reqTime, String resTime, String gapTime, String result) {
-        this.dtm.addRow(new Object[]{no, requestName, reqTime, resTime, gapTime, result});
+    private void addDataTable(String no, String dqName,String reqTime, String resTime,String result) {
+        this.dtm.addRow(new Object[]{no, dqName, reqTime, resTime, result});
     }
 
 }
