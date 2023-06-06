@@ -55,13 +55,22 @@ public class QueryTestController {
         view.tqTableSide.setDefaultEditor(Object.class, null);
         view.tqtableData.setDefaultEditor(Object.class, null);
         dtmSide = new DefaultTableModel();
-        view.tqEdUrl.setText("http://localhost:8080/SMARTGATEWAY/rest/dynamic-query");
 
         loadSideTable();
         executeQuery();
         showTable();
         selectTable();
         tableFilter();
+        loadUrlCollection();
+    }
+
+    private void loadUrlCollection() {
+        String appConfig = WorkTools.urlData;
+        String urlConfig = appConfig.split("##")[0];
+
+        for (String urlStr : urlConfig.split(";")) {
+            this.view.tqCmbUrl.addItem(urlStr);
+        }
     }
 
     private void loadSideTable() {
@@ -192,7 +201,7 @@ public class QueryTestController {
     }
 
     private String getRestData(String valRequest) throws IOException {
-        URL url = new URL(this.view.tqEdUrl.getText().trim());
+        URL url = new URL(this.view.tdCmbUrl.getEditor().getItem().toString().trim());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("User-Agent", "Mozilla/5.0");
         conn.setDoOutput(true);

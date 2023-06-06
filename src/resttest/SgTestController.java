@@ -5,16 +5,8 @@
 package resttest;
 
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.LayoutManager;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -56,20 +48,12 @@ import java.util.logging.Logger;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
-import javax.swing.text.DefaultEditorKit;
-import javax.swing.undo.UndoManager;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -120,43 +104,12 @@ public class SgTestController {
      * WARNING - Removed try catching itself - possible behaviour change.
      */
     private void loadUrlCollection() {
-        String[] urlArray;
-        File fl = new File("appconfig");
-        if (!fl.exists()) {
-            try {
-                fl.createNewFile();
-            } catch (IOException ex) {
-                Logger.getLogger((String) SgTestController.class.getName()).log(Level.SEVERE, null, (Throwable) ex);
-            }
-        }
-        BufferedReader br = null;
-        StringBuilder sb = new StringBuilder();
-        try {
-            br = new BufferedReader((Reader) new FileReader(fl));
-            String data = "";
-            while ((data = br.readLine()) != null) {
-                sb.append(data);
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger((String) SgTestController.class.getName()).log(Level.SEVERE, null, (Throwable) ex);
-        } catch (IOException ex) {
-            Logger.getLogger((String) SgTestController.class.getName()).log(Level.SEVERE, null, (Throwable) ex);
-        } finally {
-            try {
-                br.close();
-            } catch (IOException ex) {
-                Logger.getLogger((String) SgTestController.class.getName()).log(Level.SEVERE, null, (Throwable) ex);
-            }
-        }
-
-        String appConfig = sb.toString();
-
+        String appConfig = WorkTools.urlData;
         String urlConfig = appConfig.split("##")[0];
 
-        for (String urlStr : urlArray = urlConfig.split(";")) {
+        for (String urlStr : urlConfig.split(";")) {
             this.view.trCmbUrl.addItem(urlStr);
         }
-
         sleepThread = Integer.parseInt(appConfig.split("##")[1].trim());
     }
 
@@ -179,7 +132,8 @@ public class SgTestController {
     private void addDataTable(String no, String requestName, String reqTime, String resTime, String gapTime, String result) {
         this.dtm.addRow(new Object[]{no, requestName, reqTime, resTime, gapTime, result});
     }
-/*
+
+    /*
     private void changeRequestOption() {
         this.view.cmbReqOption.addItemListener(new ItemListener() {
 
@@ -261,15 +215,15 @@ public class SgTestController {
         });
     }
 
-    */
-    
+     */
+
     private String convertFlResultPlain(String src) {
         StringBuilder sb = new StringBuilder();
         String[] dataArray = src.split("\n");
         for (int i = 0; i < dataArray.length; i++) {
             String[] valueArray = dataArray[i].split(":");
             String value = valueArray[0];
-             String result = value;
+            String result = value;
             int valueLength = Integer.parseInt(valueArray[1]);
             if (value.length() < valueLength) {
                 int spaceCount = valueLength - value.length();
@@ -278,7 +232,7 @@ public class SgTestController {
                     padding = padding + " ";
                 }
                 result = value + padding;
-                
+
             }
             sb.append(result);
         }

@@ -46,8 +46,18 @@ public class DqTestController {
         this.view = view;
         dtm = new DefaultTableModel();
         loadTable();
+        loadUrlCollection();
     }
 
+        private void loadUrlCollection() {
+        String appConfig = WorkTools.urlData;
+        String urlConfig = appConfig.split("##")[0];
+
+        for (String urlStr : urlConfig.split(";")) {
+            this.view.tdCmbUrl.addItem(urlStr);
+        }
+    }
+    
     private void senDq() {
         view.tdBsendDq.addActionListener((e) -> {
 
@@ -76,7 +86,7 @@ public class DqTestController {
     }
 
     private String getRestData(String valRequest) throws IOException {
-        URL url = new URL(this.view.tdEdUrl.getText().trim());
+        URL url = new URL(this.view.tdCmbUrl.getEditor().getItem().toString().trim());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("User-Agent", "Mozilla/5.0");
         conn.setDoOutput(true);
