@@ -73,7 +73,7 @@ public class QueryTestController {
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.setColumnIdentifiers(new String[]{});
         view.tqtableData.setModel(dtm);
-        view.tqtableData.setAutoResizeMode(JTable.AUTO_RESIZE_SUBSEQUENT_COLUMNS);
+        view.tqtableData.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         List<String> lsHeader = new ArrayList<>();
         if (data.size() > 0) {
             for (int i = 0; i < data.size(); i++) {
