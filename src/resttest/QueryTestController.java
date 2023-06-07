@@ -62,17 +62,20 @@ public class QueryTestController {
         showTable();
         selectTable();
         tableFilter();
-        loadUrlCollection();
+        loadConfigCollection();
+        view.tqBclear.addActionListener((e) -> {
+            clearData();
+
+        });
+        view.tqTableSide.setRowHeight(30);
+        view.tqtableData.setRowHeight(30);
     }
 
-    private void loadUrlCollection() {
-        String appConfig = WorkTools.urlData;
-        String urlConfig = appConfig.split("##")[0];
-
+    private void loadConfigCollection() {
+        String urlConfig = WorkTools.urlData;
         for (String urlStr : urlConfig.split(";")) {
             this.view.tqCmbUrl.addItem(urlStr);
         }
-        
         view.tqCmbUrl.setSelectedIndex(2);
     }
 
@@ -101,7 +104,7 @@ public class QueryTestController {
                 }
                 dtm.addRow(lsValue.toArray());
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(view, "Empty Data");
         }
 
@@ -129,7 +132,7 @@ public class QueryTestController {
         ExecutorService execServ = Executors.newSingleThreadExecutor();
         execServ.execute(() -> {
             try {
-                view.tqLsending.setText("Sending");
+                view.tqLsending.setText("Status : Sending");
 
                 LocalDateTime reqTime = LocalDateTime.now();
                 String result = getRestData(param);
@@ -142,9 +145,9 @@ public class QueryTestController {
                 List<Map<String, Object>> lsTable = ja;
 
                 LocalDateTime resTime = LocalDateTime.now();
-                view.tqLsending.setText("Complete");
+                view.tqLsending.setText("Status : Complete");
                 Duration dura = Duration.between(reqTime, resTime);
-                view.tqLtime.setText(String.valueOf(dura.getSeconds())+"s");
+                view.tqLtime.setText("Time : " + String.valueOf(dura.getSeconds()) + "s");
 
                 addDatatableSide(lsTable);
             } catch (IOException ex) {
@@ -181,7 +184,7 @@ public class QueryTestController {
                     LocalDateTime resTime = LocalDateTime.now();
                     view.tqLsending.setText("Complete");
                     Duration dura = Duration.between(reqTime, resTime);
-                    view.tqLtime.setText(String.valueOf(dura.getSeconds())+"s");
+                    view.tqLtime.setText(String.valueOf(dura.getSeconds()) + "s");
 
                     loadAndFillTable(ja);
                 } catch (IOException ex) {
@@ -234,6 +237,16 @@ public class QueryTestController {
             }
 
         });
+    }
+
+    private void clearData() {
+        DefaultTableModel dm = (DefaultTableModel) view.tdTableData.getModel();
+        dm.getDataVector().removeAllElements();
+        dm.fireTableDataChanged();
+
+        DefaultTableModel dmSide = (DefaultTableModel) view.tqTableSide.getModel();
+        dmSide.getDataVector().removeAllElements();
+        dmSide.fireTableDataChanged();
     }
 
 }

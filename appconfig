@@ -3,4 +3,7 @@ http://localhost:8080/SMARTGATEWAY/rest/dq;
 http://localhost:8080/SMARTGATEWAY/rest/sql;
 http://172.16.23.244:8080/SMARTGATEWAYSQL/rest;
 ##
+BIF961Q::202305111                          1   BulkFile.txt                                                                                                                                                                                            1              000052035;
+BIF971Q::202305151                          1   BulkFileCt_1.txt                                                                                                                                                                                        1              000063782;
+##
 100

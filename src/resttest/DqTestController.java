@@ -6,6 +6,8 @@ package resttest;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -47,29 +49,48 @@ public class DqTestController {
         view.tdEdReqSize.setText("1");
         dtm = new DefaultTableModel();
         loadTable();
-        loadUrlCollection();
+        loadConfigCollection();
         sendDq();
+        view.tdBClear.addActionListener((e) -> {
+            clearData();
+        });
+        view.tqtableData.setRowHeight(30);
     }
 
-    private void loadUrlCollection() {
-        String appConfig = WorkTools.urlData;
-        String urlConfig = appConfig.split("##")[0];
+    private void loadConfigCollection() {
+        String urlConfig = WorkTools.urlData;
 
         for (String urlStr : urlConfig.split(";")) {
             this.view.tdCmbUrl.addItem(urlStr);
         }
 
+        String dqConfig = WorkTools.dqHeadData;
+
+        for (String dqStr : dqConfig.split(";")) {
+            this.view.tdCmbDqName.addItem(dqStr);
+        }
+
+        view.tdCmbDqName.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                String value = e.getItem().toString();
+                view.tdEdDqName.setText(value.split("::")[0]);
+                view.tdtxfl.setText(value.split("::")[1]);
+            }
+        });
         view.tdCmbUrl.setSelectedIndex(1);
     }
 
     private void sendDq() {
         view.tdBsendDq.addActionListener((e) -> {
-
+            clearData();
             int reqSize = Integer.parseInt(view.tdEdReqSize.getText());
             String dq = view.tdEdDqName.getText();
             String fl = view.tdtxfl.getText();
             String param = "{\"dq\":\"" + dq + "\",\"fl\":\"" + fl + "\"}";
 
+            LocalDateTime startTime = LocalDateTime.now();
+            view.tdLsending.setText("Status : Sending");
             for (int i = 0; i < reqSize; i++) {
                 ExecutorService execServ = Executors.newSingleThreadExecutor();
                 final int fnumber = i;
@@ -85,6 +106,11 @@ public class DqTestController {
                     }
                 });
             }
+            LocalDateTime endTime = LocalDateTime.now();
+            Duration dura = Duration.between(startTime, endTime);
+            long duratime = dura.getSeconds();
+            view.tdLtime.setText("Time : " + duratime + "s");
+            view.tdLsending.setText("Status : Complete");
         });
 
     }
@@ -113,18 +139,22 @@ public class DqTestController {
         this.view.tdTableData.setModel((TableModel) this.dtm);
         this.view.tdTableData.getSelectionModel().setSelectionMode(0);
         this.view.tdTableData.getColumnModel().getColumn(0).setMaxWidth(40);
-        //this.view.tdTableData.getColumnModel().getColumn(1).setMinWidth(150);
-        //this.view.tdTableData.getColumnModel().getColumn(1).setMaxWidth(150);
-        this.view.tdTableData.getColumnModel().getColumn(2).setMinWidth(130);
-        this.view.tdTableData.getColumnModel().getColumn(2).setMaxWidth(130);
-        this.view.tdTableData.getColumnModel().getColumn(3).setMinWidth(130);
-        this.view.tdTableData.getColumnModel().getColumn(3).setMaxWidth(130);
-        this.view.tdTableData.getColumnModel().getColumn(4).setMinWidth(150);
-        this.view.tdTableData.getColumnModel().getColumn(4).setMaxWidth(150);
+        this.view.tdTableData.getColumnModel().getColumn(2).setMinWidth(150);
+        this.view.tdTableData.getColumnModel().getColumn(2).setMaxWidth(150);
+        this.view.tdTableData.getColumnModel().getColumn(3).setMinWidth(150);
+        this.view.tdTableData.getColumnModel().getColumn(3).setMaxWidth(150);
+        this.view.tdTableData.getColumnModel().getColumn(4).setMinWidth(200);
+        this.view.tdTableData.getColumnModel().getColumn(4).setMaxWidth(200);
     }
 
     private void addDataTable(String no, String dqName, String reqTime, String resTime, String result) {
         this.dtm.addRow(new Object[]{no, dqName, reqTime, resTime, result});
+    }
+
+    private void clearData() {
+        DefaultTableModel dm = (DefaultTableModel) view.tdTableData.getModel();
+        dm.getDataVector().removeAllElements();
+        dm.fireTableDataChanged();
     }
 
 }

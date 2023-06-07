@@ -4,6 +4,7 @@
  */
 package resttest;
 
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,8 +22,10 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class WorkTools {
 
-    public static String urlData="";
-    
+    public static String urlData = "";
+    public static String dqHeadData = "";
+    public static String utilData = "";
+
     /**
      * @param args the command line arguments
      */
@@ -57,8 +60,12 @@ public class WorkTools {
                 }
             }
 
-            urlData=sb.toString();
-            
+            String appConfig = sb.toString();
+            urlData = appConfig.split("##")[0];
+            dqHeadData = appConfig.split("##")[1];
+            utilData = appConfig.split("##")[2];
+
+            setUIFont(new javax.swing.plaf.FontUIResource("Sogoe ui", Font.PLAIN, 16));
             UIManager.setLookAndFeel(
                     UIManager.getSystemLookAndFeelClassName());
 
@@ -77,4 +84,14 @@ public class WorkTools {
         }
     }
 
+    public static void setUIFont(javax.swing.plaf.FontUIResource f) {
+        java.util.Enumeration keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+            Object key = keys.nextElement();
+            Object value = UIManager.get(key);
+            if (value instanceof javax.swing.plaf.FontUIResource) {
+                UIManager.put(key, f);
+            }
+        }
+    }
 }

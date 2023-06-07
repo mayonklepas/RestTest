@@ -83,7 +83,7 @@ public class SgTestController {
     public SgTestController(MainPanelView view) {
         this.readFile();
         this.view = view;
-        this.loadUrlCollection();
+        this.loadConfigCollection();
         view.trEdDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         view.trEdEte.setText("10000000");
         view.trEdReqSize.setText("1");
@@ -98,19 +98,20 @@ public class SgTestController {
         view.trBreset.addActionListener(e -> this.clearData());
         this.sendRequest();
         this.selectedTable();
+        view.tqtableData.setRowHeight(30);
     }
 
     /*
      * WARNING - Removed try catching itself - possible behaviour change.
      */
-    private void loadUrlCollection() {
-        String appConfig = WorkTools.urlData;
-        String urlConfig = appConfig.split("##")[0];
+    private void loadConfigCollection() {
+        String urlConfig = WorkTools.urlData;
+        String utilConfig = WorkTools.utilData;
 
         for (String urlStr : urlConfig.split(";")) {
             this.view.trCmbUrl.addItem(urlStr);
         }
-        sleepThread = Integer.parseInt(appConfig.split("##")[1].trim());
+        sleepThread = Integer.parseInt(utilConfig.trim());
         
         view.trCmbUrl.setSelectedIndex(0);
     }
